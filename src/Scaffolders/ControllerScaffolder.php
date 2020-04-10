@@ -111,7 +111,7 @@ class ControllerScaffolder
             "\t->allowedFilters({$dumper->dump($this->getAllowedFilters())})",
             "\t->allowedSorts({$dumper->dump($this->getAllowedSorts())})",
             "\t->jsonPaginate();",
-            "\nreturn response(new {$this->config['name']}Collection(\${$pluralCamel}), Response::HTTP_OK);",
+            "\nreturn new {$this->config['name']}Collection(\${$pluralCamel});",
         ]);
 
         return implode("\n", $parts);

@@ -39,54 +39,45 @@ class PolicyScaffolder
 
         $class->addTrait('Illuminate\Auth\Access\HandlesAuthorization');
 
-        $userParams = [
-            (new Parameter('user'))->setType('App\User'),
-        ];
-
         $modelCamel = Str::of($this->config['name'])->camel();
         $modelSnake = Str::of($this->config['name'])->snake();
-
-        $userAndModelParams = [
-            (new Parameter('user'))->setType('App\User'),
-            (new Parameter($modelCamel))->setType('App\\'.$this->config['name']),
-        ];
 
         $userModelCheck = "return \$user->is(\${$modelCamel}->user) ? Response::allow() : Response::deny('You do not own this $modelSnake.');";
 
         $class
             ->addMethod('viewAny')
             ->setBody('return true;')
-            ->setParameters($userParams);
+            ->setParameters($this->getUserParams(true));
 
         $class
             ->addMethod('view')
             ->setBody('return true;')
-            ->setParameters($userAndModelParams);
+            ->setParameters($this->getUserAndModelParams(true));
 
         $class
             ->addMethod('create')
             ->setBody('return true;')
-            ->setParameters($userParams);
+            ->setParameters($this->getUserParams());
 
         $class
             ->addMethod('update')
             ->setBody($userModelCheck)
-            ->setParameters($userAndModelParams);
+            ->setParameters($this->getUserAndModelParams());
 
         $class
             ->addMethod('delete')
             ->setBody($userModelCheck)
-            ->setParameters($userAndModelParams);
+            ->setParameters($this->getUserAndModelParams());
 
         $class
             ->addMethod('restore')
             ->setBody($userModelCheck)
-            ->setParameters($userAndModelParams);
+            ->setParameters($this->getUserAndModelParams());
 
         $class
             ->addMethod('forceDelete')
             ->setBody($userModelCheck)
-            ->setParameters($userAndModelParams);
+            ->setParameters($this->getUserAndModelParams());
 
         $path = app_path('Policies/'.$this->config['name'].'Policy.php');
 
@@ -95,5 +86,20 @@ class PolicyScaffolder
         file_put_contents($path, $print);
 
         return $path;
+    }
+
+    private function getUserAndModelParams($nullableUser = false)
+    {
+        return [
+            (new Parameter('user'))->setType('App\User')->setNullable($nullableUser),
+            (new Parameter(Str::of($this->config['name'])->camel()->__toString()))->setType('App\\'.$this->config['name']),
+        ];
+    }
+
+    private function getUserParams($nullableUser = false)
+    {
+        return [
+            (new Parameter('user'))->setType('App\User')->setNullable($nullableUser),
+        ];
     }
 }

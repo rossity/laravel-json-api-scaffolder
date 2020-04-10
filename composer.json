@@ -17,6 +17,7 @@
     "json-api"
   ],
   "require": {
+    "php": "^7.4",
     "illuminate/support": "~5|~6|~7",
     "nette/php-generator": "^3.3",
     "spatie/laravel-query-builder": "^2.8",
