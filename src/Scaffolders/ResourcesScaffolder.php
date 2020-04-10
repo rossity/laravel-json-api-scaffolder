@@ -104,52 +104,13 @@ class ResourcesScaffolder
     {
         $camelName = Str::of($this->config['name'])->camel()->__toString();
 
-        $fields = collect($this->config['fields'])
-            ->map(function ($field, $key) use ($camelName) {
-                return new Literal("\${$camelName}->".$key);
-            })
-            ->prepend(new Literal("\${$camelName}->id"), 'id');
-
-        $fields = $fields->merge([
-            'created_at' => new Literal("\${$camelName}->created_at"),
-            'updated_at' => new Literal("\${$camelName}->updated_at"),
-        ])->toArray();
-
         $closure = new Closure();
 
         $closure->addParameter($camelName)->setType("{$this->config['name']}");
 
-        $dumper = new Dumper();
-
         $printer = new PsrPrinter();
 
         $conditionals = [];
-
-//        foreach ($this->config['relationships'] as $key => $relationship) {
-//            if (in_array($relationship['type'], ['hasOne', 'hasOneThrough', 'belongsTo'])) {
-//                $name = (string) Str::of($key)->snake();
-//                $resource = 'Resource';
-//            } else {
-//                $name = (string) Str::of($key)->plural()->snake();
-//                $resource = 'Collection';
-//            }
-//
-//            $putClosure = new Closure();
-//
-//            $putClosure
-//                ->addParameter('collection')
-//                ->setType('Collection');
-//
-//            $putClosure->addUse($camelName);
-//
-//            $putClosure->setBody("\$collection->put('$name', new {$key}$resource(\${$camelName}->$name));");
-//
-//            $conditionals[] = new Literal("\t\n->when(\${$camelName}->relationLoaded('$name'), {$printer->printClosure($putClosure)})");
-//        }
-//
-//        $conditionals = implode('', $conditionals);
-//
-//        $closure->setBody("return collect({$dumper->dump($fields)}){$conditionals};");
 
         foreach ($this->config['relationships'] as $key => $relationship) {
             if (in_array($relationship['type'], ['hasOne', 'hasOneThrough', 'belongsTo'])) {
@@ -160,13 +121,13 @@ class ResourcesScaffolder
                 $resource = 'Collection';
             }
 
-            $conditionals[] = new Literal("if (\${$camelName}->relationLoaded('$name')) {\n   \$resource['$name'] = new {$key}$resource(\${$camelName}->$name);\n}");
+            $conditionals[] = new Literal("if (\${$camelName}->relationLoaded('$name')) {\n   \${$camelName}['$name'] = new {$key}$resource(\${$camelName}->$name);\n}");
         }
 
         $conditionals = implode("\n\n", $conditionals);
 
-        $closure->setBody("\$resource = {$dumper->dump($fields)};\n\n{$conditionals}\n\nreturn \$resource;");
+        $closure->setBody("{$conditionals}\n\nreturn \${$camelName}->getAttributes();");
 
-        return ['data' => new Literal("\$this->collection->transform({$printer->printClosure($closure)})")];
+        return new Literal("\$this->collection->transform({$printer->printClosure($closure)})");
     }
 }
