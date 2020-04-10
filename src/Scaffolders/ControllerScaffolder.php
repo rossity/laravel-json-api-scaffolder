@@ -107,6 +107,7 @@ class ControllerScaffolder
         }
 
         $parts = array_merge($parts, [
+            "\t->allowedFields({$dumper->dump($this->getAllowedFields())})",
             "\t->allowedIncludes({$dumper->dump($this->getAllowedIncludes())})",
             "\t->allowedFilters({$dumper->dump($this->getAllowedFilters())})",
             "\t->allowedSorts({$dumper->dump($this->getAllowedSorts())})",
@@ -128,6 +129,11 @@ class ControllerScaffolder
 
             return Str::plural($name);
         })->values()->toArray();
+    }
+
+    private function getAllowedFields()
+    {
+        return collect($this->config['fields'])->keys()->prepend('id')->toArray();
     }
 
     private function getAllowedFilters()
@@ -171,7 +177,7 @@ class ControllerScaffolder
 
         $parts = array_merge($parts, [
             "\${$this->camelName}->fill(\$request->validated())->save();",
-            "return response(new {$this->config['name']}Resource(\${$this->camelName}), Response::HTTP_CREATED);",
+            "return (new {$this->config['name']}Resource(\${$this->camelName}))->response()->setStatusCode(Response::HTTP_CREATED);",
         ]);
 
         return implode("\n\n", $parts);
@@ -179,14 +185,14 @@ class ControllerScaffolder
 
     private function getShowBody()
     {
-        return "response(new {$this->config['name']}Resource(\${$this->camelName}), Response::HTTP_OK);";
+        return "return (new {$this->config['name']}Resource(\${$this->camelName}))->response()->setStatusCode(Response::HTTP_OK);";
     }
 
     private function getUpdateBody()
     {
         $parts = [
             "\${$this->camelName}->update(\$request->validated());",
-            "return response(new {$this->config['name']}Resource(\${$this->camelName}), Response::HTTP_OK);",
+            "return (new {$this->config['name']}Resource(\${$this->camelName}))->response()->setStatusCode(Response::HTTP_OK);",
         ];
 
         return implode("\n\n", $parts);
