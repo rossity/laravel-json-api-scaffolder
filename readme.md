@@ -2,7 +2,9 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 
-This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
+A highly opinionated package that rapidly scaffolds Laravel JSON API projects.
+
+For more info, see the [Wiki][link-wiki]
 
 ## Installation
 
@@ -11,18 +13,9 @@ Via Composer
 ``` bash
 $ composer require rossity/laravel-json-api-scaffolder
 ```
-
-## Usage
-
 ## Change log
 
 Please see the [changelog](changelog.md) for more information on what has changed recently.
-
-## Testing
-
-``` bash
-$ composer test
-```
 
 ## Contributing
 
@@ -46,9 +39,10 @@ MIT. Please see the [license file](license.md) for more information.
 [ico-travis]: https://img.shields.io/travis/rossity/laravelapiscaffolder/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/rossity/laravelapiscaffolder
+[link-packagist]: https://packagist.org/packages/rossity/laravel-json-api-scaffolder
 [link-downloads]: https://packagist.org/packages/rossity/laravelapiscaffolder
 [link-travis]: https://travis-ci.org/rossity/laravelapiscaffolder
 [link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/rossity
 [link-contributors]: ../../contributors
+[link-wiki]: https://github.com/rossity/laravel-json-api-scaffolder/wiki

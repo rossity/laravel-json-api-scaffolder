@@ -96,14 +96,17 @@ class ScaffoldConfig extends Command
         }
 
         if ($config['scaffolds']['controller'] = $this->confirm('Add controller?', 'yes')) {
-            if ($config['scaffolds']['resources'] = $this->confirm('Add resources?', 'yes')) {
-            }
-
-            if ($config['scaffolds']['requests'] = $this->confirm('Add requests?', 'yes')) {
-            }
-
-            if ($config['scaffolds']['policy'] = $this->confirm('Add policy?', 'yes')) {
-            }
+            $config['scaffolds']['resources'] = true;
+            $config['scaffolds']['requests'] = true;
+            $config['scaffolds']['policy'] = true;
+//            if ($config['scaffolds']['resources'] = $this->confirm('Add resources?', 'yes')) {
+//            }
+//
+//            if ($config['scaffolds']['requests'] = $this->confirm('Add requests?', 'yes')) {
+//            }
+//
+//            if ($config['scaffolds']['policy'] = $this->confirm('Add policy?', 'yes')) {
+//            }
         }
 
         if ($config['scaffolds']['factory'] = $this->confirm('Add factory?', 'yes')) {
