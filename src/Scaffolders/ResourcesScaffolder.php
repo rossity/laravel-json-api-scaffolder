@@ -12,7 +12,6 @@ class ResourcesScaffolder
 {
     private $config;
 
-    private $file;
     private $namespace;
 
     public function __construct($config)
@@ -36,7 +35,7 @@ class ResourcesScaffolder
     {
         $file = new PhpFile();
 
-        $this->namespace = $file->addNamespace('App\Http\Resources\\');
+        $this->namespace = $file->addNamespace('App\Http\Resources');
 
         $use = $type === 'Resource' ? 'Illuminate\Http\Resources\Json\JsonResource' : 'Illuminate\Http\Resources\Json\ResourceCollection';
 

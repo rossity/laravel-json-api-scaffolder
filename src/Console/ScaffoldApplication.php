@@ -3,6 +3,7 @@
 namespace Rossity\LaravelApiScaffolder\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class ScaffoldApplication extends Command
 {
@@ -12,6 +13,8 @@ class ScaffoldApplication extends Command
 
     public function handle()
     {
+        $this->comment("Scaffolding application\n");
+
         $files = collect(array_diff(scandir(base_path('scaffolding')), ['..', '.']))
             ->map(function ($file) {
                 return require base_path('scaffolding/'.$file);
@@ -19,8 +22,9 @@ class ScaffoldApplication extends Command
             ->sortBy('order');
 
         foreach ($files as $file) {
+            $this->comment("Scaffolding {$file['name']}");
             foreach (array_filter($file['scaffolds']) as $scaffold => $create) {
-                $this->info("Creating {$file['name']} $scaffold");
+                $this->info("Creating $scaffold");
 
                 $class = $this->getScaffoldClass($scaffold);
 
@@ -31,7 +35,17 @@ class ScaffoldApplication extends Command
             if ($file['scaffolds']['migration']) {
                 sleep(1);
             }
+            $this->line("\n");
         }
+
+        $this->comment('Make sure to add the following routes to routes/api.php');
+
+        $files->where('scaffolds.controller', true)->each(function ($file) {
+            $name = Str::of($file['name'])->plural()->snake()->__toString();
+            $this->info("Route::apiResource('{$name}', '{$file['name']}Controller');");
+        });
+
+        $this->line("\n");
 
         shell_exec('composer dump-autoload');
     }
