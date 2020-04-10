@@ -42,7 +42,6 @@ class ResourcesScaffolder
 
         if ($type == 'Collection') {
             $namespace->addUse("App\\{$this->config['name']}");
-            $namespace->addUse("Illuminate\Support\Collection");
         }
 
         $name = $this->config['name'].$type;
