@@ -175,8 +175,17 @@ class ControllerScaffolder
             }
         }
 
+//        $relationships = collect($this->config['relationships'])->reject(function ($relationship, $name) {
+//            return $name == 'User' || $relationship['type'] !== 'belongsTo';
+//        });
+//
+//        foreach ($relationships as $name => $relationship) {
+//            $parts[] = "\${$this->camelName}->user()->associate(\$request->user());";
+//        }
+
         $parts = array_merge($parts, [
-            "\${$this->camelName}->fill(\$request->validated())->save();",
+            "\${$this->camelName}->fill(\$request->validated());",
+            "\${$this->camelName}->save();",
             "return (new {$this->config['name']}Resource(\${$this->camelName}))->response()->setStatusCode(Response::HTTP_CREATED);",
         ]);
 

@@ -42,7 +42,7 @@ class PolicyScaffolder
         $modelCamel = Str::of($this->config['name'])->camel();
         $modelSnake = Str::of($this->config['name'])->snake();
 
-        $userModelCheck = "return \$user->is(\${$modelCamel}->user) ? Response::allow() : Response::deny('You do not own this $modelSnake.');";
+        $userModelCheck = "return \$user->is(\${$modelCamel}->user) ? Response::allow() : Response::deny('You cannot create this $modelSnake.');";
 
         $class
             ->addMethod('viewAny')
@@ -56,7 +56,7 @@ class PolicyScaffolder
 
         $class
             ->addMethod('create')
-            ->setBody('return true;')
+            ->setBody("return \$user->id === request()->user_id ? Response::allow() : Response::deny('You do not own this $modelSnake.');")
             ->setParameters($this->getUserParams());
 
         $class

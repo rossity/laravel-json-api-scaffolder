@@ -46,9 +46,10 @@ class RequestsScaffolder
 
         $class->setExtends('Illuminate\Foundation\Http\FormRequest');
 
-        $class
-            ->addMethod('authorize')
-            ->setBody('return true;');
+//        not needed since the default is to return true
+//        $class
+//            ->addMethod('authorize')
+//            ->setBody('return true;');
 
         $dumper = new Dumper();
         $class
@@ -64,7 +65,27 @@ class RequestsScaffolder
         return $path;
     }
 
-    public function getRules($type)
+    private function getRules($type)
+    {
+        if ($type == 'Store') {
+            return $this->getFieldRules($type)->merge($this->getRelatedModelRules())->toArray();
+        }
+
+        return $this->getFieldRules($type)->toArray();
+    }
+
+    private function getRelatedModelRules()
+    {
+        return collect($this->config['relationships'])
+            ->where('type', '=', 'belongsTo')
+            ->mapWithKeys(function ($relationship, $key) {
+                return [
+                    Str::of($key)->snake()->finish('_id')->__toString() => 'exists:'.Str::of($key)->snake()->plural()->__toString().',id',
+                ];
+            });
+    }
+
+    private function getFieldRules($type)
     {
         return collect($this->config['fields'])
             ->where('type', '!=', 'uuid')
@@ -116,6 +137,6 @@ class RequestsScaffolder
                 }
 
                 return $rulesImploded;
-            })->toArray();
+            });
     }
 }
