@@ -37,7 +37,7 @@ class ControllerScaffolder
             ->addUse('Spatie\QueryBuilder\QueryBuilder')
             ->addUse('Illuminate\Http\Response')
             ->addUse('Illuminate\Http\Request')
-            ->addUse('App\\'.$this->config['name']);
+            ->addUse('App\\Models\\'.$this->config['name']);
 
         $class = $namespace->addClass($this->config['name'].'Controller')
             ->setExtends('App\Http\Controllers\Controller');
@@ -59,20 +59,20 @@ class ControllerScaffolder
 
         $class->addMethod('show')
             ->setParameters([
-                (new Parameter($this->camelName))->setType('App\\'.$this->config['name']),
+                (new Parameter($this->camelName))->setType('App\\Models\\'.$this->config['name']),
             ])
             ->setBody($this->getShowBody());
 
         $class->addMethod('update')
             ->setParameters([
                 (new Parameter('request'))->setType('App\Http\Requests\\'.$this->config['name'].'UpdateRequest'),
-                (new Parameter($this->camelName))->setType('App\\'.$this->config['name']),
+                (new Parameter($this->camelName))->setType('App\\Models\\'.$this->config['name']),
             ])
             ->setBody($this->getUpdateBody());
 
         $class->addMethod('destroy')
             ->setParameters([
-                (new Parameter($this->camelName))->setType('App\\'.$this->config['name']),
+                (new Parameter($this->camelName))->setType('App\\Models\\'.$this->config['name']),
             ])
             ->setBody($this->getDestroyBody());
 

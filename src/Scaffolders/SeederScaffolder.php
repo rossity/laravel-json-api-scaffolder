@@ -16,22 +16,25 @@ class SeederScaffolder
 {
     private $config;
 
-    private $file;
+    private $namespace;
 
     public function __construct($config)
     {
         $this->config = $config;
-
-        $this->file = new PhpFile();
     }
 
     public function handle()
     {
-        $this->file
-            ->addUse('Illuminate\Database\Seeder')
-            ->addUse("App\\{$this->config['name']}");
+        $file = new PhpFile();
 
-        $class = $this->file->addClass($this->config['name'].'Seeder')
+        $this->namespace = $this->file->addNamespace('Database\Seeders');
+
+        $this->namespace
+            ->addUse('Illuminate\Database\Seeder')
+            ->addUse("App\\Models\\{$this->config['name']}");
+
+
+        $class = $this->namespace->addClass($this->config['name'].'Seeder')
             ->setExtends('Illuminate\Database\Seeder');
 
         $class->addMethod('run')
@@ -60,7 +63,7 @@ class SeederScaffolder
                 if (in_array($relationship['type'], ['hasOne', 'hasOneThrough'])) {
                     $snake = Str::of($name)->snake();
                     $parts[] = "\${$camelName}->{$snake}()->save(factory({$name}::class)->make());";
-                    $this->file->addUse("App\\{$name}");
+                    $this->namespace->addUse("App\\{$name}");
                 } else {
                     if (
                         in_array($relationship['type'], ['hasMany', 'hasManyThrough']) ||
@@ -68,7 +71,7 @@ class SeederScaffolder
                     ) {
                         $snakePlural = Str::of($name)->snake()->plural();
                         $parts[] = "\${$camelName}->{$snakePlural}()->saveMany(factory({$name}::class, mt_rand(1, 10))->make());";
-                        $this->file->addUse("App\\{$name}");
+                        $this->namespace->addUse("App\\{$name}");
                     }
                 }
             }

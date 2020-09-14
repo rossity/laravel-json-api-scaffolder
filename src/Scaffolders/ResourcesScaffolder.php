@@ -41,7 +41,7 @@ class ResourcesScaffolder
         $namespace->addUse($use);
 
         if ($type == 'Collection') {
-            $namespace->addUse("App\\{$this->config['name']}");
+            $namespace->addUse("App\\Models\\{$this->config['name']}");
         }
 
         $name = $this->config['name'].$type;

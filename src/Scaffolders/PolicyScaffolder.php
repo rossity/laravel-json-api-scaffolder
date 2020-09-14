@@ -22,7 +22,7 @@ class PolicyScaffolder
 
     public function handle()
     {
-        if (! is_dir(app_path('Policies'))) {
+        if (!is_dir(app_path('Policies'))) {
             mkdir(app_path('Policies'));
         }
 
@@ -30,8 +30,8 @@ class PolicyScaffolder
 
         $namespace = $file->addNamespace('App\Policies');
 
-        $namespace->addUse('App\User');
-        $namespace->addUse('App\\'.$this->config['name']);
+        $namespace->addUse('App\\Models\\User');
+        $namespace->addUse('App\\Models\\'.$this->config['name']);
         $namespace->addUse('Illuminate\Auth\Access\Response');
         $namespace->addUse('Illuminate\Auth\Access\HandlesAuthorization');
 
@@ -91,15 +91,15 @@ class PolicyScaffolder
     private function getUserAndModelParams($nullableUser = false)
     {
         return [
-            (new Parameter('user'))->setType('App\User')->setNullable($nullableUser),
-            (new Parameter(Str::of($this->config['name'])->camel()->__toString()))->setType('App\\'.$this->config['name']),
+            (new Parameter('user'))->setType('App\Models\User')->setNullable($nullableUser),
+            (new Parameter(Str::of($this->config['name'])->camel()->__toString()))->setType('App\\Models\\'.$this->config['name']),
         ];
     }
 
     private function getUserParams($nullableUser = false)
     {
         return [
-            (new Parameter('user'))->setType('App\User')->setNullable($nullableUser),
+            (new Parameter('user'))->setType('App\Models\User')->setNullable($nullableUser),
         ];
     }
 }

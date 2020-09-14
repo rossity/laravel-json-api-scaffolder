@@ -23,13 +23,19 @@ class ModelScaffolder
     {
         $file = new PhpFile();
 
-        $namespace = $file->addNamespace('App');
+        $namespace = $file->addNamespace('App\\Models');
 
         $namespace->addUse('Illuminate\Database\Eloquent\Model');
+
+        if ($this->config['scaffolds']['factory']) {
+            $namespace->addUse('Illuminate\Database\Eloquent\Factories\HasFactory');
+        }
 
         $class = $namespace->addClass($this->config['name']);
 
         $class->setExtends('Illuminate\Database\Eloquent\Model');
+
+        $class->addTrait('Illuminate\Database\Eloquent\Factories\HasFactory');
 
         $class->addProperty('fillable', $this->getFillable())->setProtected();
 
@@ -41,7 +47,7 @@ class ModelScaffolder
                 ->setBody($this->getRelationshipMethodBody($key, $relationship));
         }
 
-        $path = app_path($this->config['name'].'.php');
+        $path = app_path('Models/'.$this->config['name'].'.php');
 
         $print = (new PsrPrinter())->printFile($file);
 
