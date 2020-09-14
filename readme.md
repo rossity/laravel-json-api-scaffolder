@@ -11,7 +11,7 @@ For more info, see the [Wiki][link-wiki]
 Via Composer
 
 ``` bash
-$ composer require rossity/laravel-json-api-scaffolder
+$ composer require rossity/laravel-json-api-scaffolder --dev
 ```
 ## Change log
 
