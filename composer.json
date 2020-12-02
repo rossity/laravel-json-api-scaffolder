@@ -17,11 +17,11 @@
     "json-api"
   ],
   "require": {
-    "php": "^7.4",
+    "php": "^7.4 || ^8.0",
     "illuminate/support": "~7|~8",
-    "spatie/laravel-query-builder": "^3.2",
-    "spatie/laravel-json-api-paginate": "^1.8",
-    "nette/php-generator": "^3.4"
+    "spatie/laravel-query-builder": "^3.4",
+    "spatie/laravel-json-api-paginate": "^1.10",
+    "nette/php-generator": "^3.5"
   },
   "autoload": {
     "psr-4": {
